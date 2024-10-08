@@ -1,18 +1,19 @@
 import { Request, Response, NextFunction } from 'express';
-import '../types/express';
 import { verifyToken } from '../utils/tokenUtils';
+import { RequestAuth } from '../../types/express';
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const authMiddleware = (req: RequestAuth, res: Response, next: NextFunction): void => {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) {
-        return res.status(401).send('Accès refusé. Aucun token fourni.');
+        res.status(401).send('Accès refusé. Aucun token fourni.');
+        return
     }
 
     try {
         const decoded = verifyToken(token);
         req.user = decoded;
         next();
-    } catch (error) {
+    } catch (err) {
         res.status(400).send('Token invalide.');
     }
 };

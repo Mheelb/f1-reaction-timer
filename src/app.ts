@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
 import timerRoutes from './routes/timerRoutes';
-import errorHandler from './middlewares/errorHandler';
+import errorHandler from './middlewares/errorHandlerMiddelware';
 
 const app = express();
 
