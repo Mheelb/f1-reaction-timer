@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes';
 import timerRoutes from './routes/timerRoutes';
+import errorHandler from './middleware/errorHandler';
 
 const app = express();
 
@@ -17,5 +18,7 @@ app.use('/api/timers', timerRoutes);
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World !');
 });
+
+app.use(errorHandler);
 
 export default app;

@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import User from '../models/User';
 import { comparePassword } from '../utils/passwordUtils';
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const users = await User.find();
         if (!users) {
@@ -11,15 +11,11 @@ export const getAllUsers = async (req: Request, res: Response) => {
         }
         res.json(users);
     } catch (err) {
-        if (err instanceof Error) {
-            res.status(500).json({ message: err.message });
-        } else {
-            res.status(500).json({ message: 'An unknown error occurred' });
-        }
+        next(err);
     }
 };
 
-export const getUserById = async (req: Request, res: Response) => {
+export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
         const user = await User.findById(id);
@@ -29,11 +25,7 @@ export const getUserById = async (req: Request, res: Response) => {
         }
         res.json(user);
     } catch (err) {
-        if (err instanceof Error) {
-            res.status(500).json({ message: err.message });
-        } else {
-            res.status(500).json({ message: 'An unknown error occurred' });
-        }
+        next(err);
     }
 };
 
@@ -48,7 +40,7 @@ export const registerUser = async (req: Request, res: Response) => {
     }
 };
 
-export const loginUser = async (req: Request, res: Response) => {
+export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body;
     try {
       const user = await User.findOne({ email });
@@ -63,6 +55,6 @@ export const loginUser = async (req: Request, res: Response) => {
       }
       res.status(200).send('Connexion réussie');
     } catch (error) {
-      res.status(500).send('Erreur lors de la connexion');
+      next(error);
     }
 };
