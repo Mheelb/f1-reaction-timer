@@ -1,10 +1,10 @@
 import { Router, Request, Response } from 'express';
+import { comparePassword } from '../utils/passwordUtils';
 import User from '../models/User';
 
 const router = Router();
 
-// Route pour l'inscription
-router.post('/register', async (req: Request, res: Response) => {
+router.post('/register', async (req: Request, res: Response): Promise<void> => {
   const { email, password, role } = req.body;
   try {
     const user = new User({ email, password, role });
@@ -15,16 +15,20 @@ router.post('/register', async (req: Request, res: Response) => {
   }
 });
 
-// Route pour la connexion
-router.post('/login', async (req: Request, res: Response) => {
+router.post('/login', async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email, password });
-    if (user) {
-      res.status(200).send('Connexion réussie');
-    } else {
+    const user = await User.findOne({ email });
+    if (!user) {
       res.status(401).send('Email ou mot de passe incorrect');
+      return;
     }
+    const isMatch = await comparePassword(password, user.password);
+    if (!isMatch) {
+      res.status(401).send('Email ou mot de passe incorrect');
+      return;
+    }
+    res.status(200).send('Connexion réussie');
   } catch (error) {
     res.status(500).send('Erreur lors de la connexion');
   }
