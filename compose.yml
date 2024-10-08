@@ -1,0 +1,36 @@
+services:
+  app-backend:
+    build: .
+    container_name: app-backend-f1
+    restart: always
+    ports:
+      - '3001:3001'
+    env_file:
+      - .env
+    depends_on:
+      - db
+    volumes:
+      - .:/usr/node/app/src
+      - /usr/node/app/node_modules
+    environment:
+      MONGO_URI: ${MONGO_URI}
+    networks:
+      - app-network
+
+  db:
+    image: mongo:latest
+    container_name: mongo-f1
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - db:/data/db
+    networks:
+      - app-network
+
+volumes:
+  db: {}
+
+networks:
+  app-network:
+    driver: bridge
