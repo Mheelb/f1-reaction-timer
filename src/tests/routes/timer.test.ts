@@ -16,6 +16,13 @@ describe('Routes timer', () => {
             expect(res.statusCode).toEqual(200);
             expect(res.body).toBeInstanceOf(Array);
         });
+
+        test('Devrait retourner 200 et une liste de meilleurs temps de réaction pour un utilisateur spécifique', async () => {
+            const userId = process.env.TEST_USER_ID as string;
+            const res = await request(app).get(`/api/timers/get-best-reaction-times?userId=${userId}`);
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toBeInstanceOf(Array);
+        });
     });
 
     describe('GET /api/timers/get-best-reaction-time', () => {
@@ -27,6 +34,13 @@ describe('Routes timer', () => {
             expect(res.statusCode).toEqual(200);
             expect(res.body).toHaveProperty('time');
         });
+
+        test('Devrait retourner 200 et le meilleur temps de réaction pour un utilisateur spécifique', async () => {
+            const userId = process.env.TEST_USER_ID as string;
+            const res = await request(app).get(`/api/timers/get-best-reaction-time?userId=${userId}`);
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toHaveProperty('time');
+        });
     });
 
     describe('GET /api/timers/get-reaction-times', () => {
@@ -35,30 +49,17 @@ describe('Routes timer', () => {
             expect(res.statusCode).toEqual(200);
             expect(res.body).toBeInstanceOf(Array);
         });
-    });
 
-    describe('GET /api/timers/get-reaction-times/:userId', () => {
         test('Devrait retourner 200 et une liste de temps de réaction pour un utilisateur spécifique', async () => {
             const userId = process.env.TEST_USER_ID as string;
-            const res = await request(app).get(`/api/timers/get-reaction-times/${userId}`);
+            const res = await request(app).get(`/api/timers/get-reaction-times?userId=${userId}`);
             expect(res.statusCode).toEqual(200);
-            expect(res.body).toBeInstanceOf(Array || null);
-        });
-    });
-
-    describe('GET /api/timers/get-best-reaction-time/:userId', () => {
-        test('Devrait retourner 200 et le meilleur temps de réaction pour un utilisateur spécifique', async () => {
-            const userId = process.env.TEST_USER_ID as string;
-            const res = await request(app).get(`/api/timers/get-best-reaction-time/${userId}`);
-            expect(res.statusCode).toEqual(200);
-            expect(res.body).toBeInstanceOf(Object || null);
+            expect(res.body).toBeInstanceOf(Array);
         });
     });
 
     describe('POST /api/timers/submit-reaction-time', () => {
         test('Devrait retourner 201 si le temps de réaction est soumis avec succès', async () => {
-            console.log(process.env.TEST_USER_ID);
-            
             const token = generateToken(process.env.TEST_USER_ID as string);
             const res = await request(app)
                 .post('/api/timers/submit-reaction-time')
