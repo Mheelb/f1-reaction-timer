@@ -36,8 +36,8 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
         const user = new User({ email, password, role });
         await user.save();
         res.status(201).send('Utilisateur enregistré avec succès');
-    } catch (error) {
-        next(error);
+    } catch (err) {
+        next(err);
     }
 };
 
@@ -56,7 +56,21 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
         }
         const token = generateToken(user._id.toString());
         res.status(200).json({ message: 'Connexion réussie', token });
-    } catch (error) {
-        next(error);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const removeUser = async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    try {
+        const user = await User.findByIdAndDelete(id);
+        if (!user) {
+            res.status(404).send('Utilisateur non trouvé');
+            return;
+        }
+        res.status(200).send('Utilisateur supprimé avec succès');
+    } catch (err) {
+        next(err);
     }
 };

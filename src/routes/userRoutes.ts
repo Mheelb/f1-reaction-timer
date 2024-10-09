@@ -5,8 +5,10 @@ import {
   registerUser,
   loginUser,
   getAllUsers,
-  getUserById
+  getUserById,
+  removeUser
 } from '../controllers/UserController';
+import { authMiddleware } from '../middlewares/auhtMiddleware';
 
 const router = Router();
 
@@ -17,5 +19,7 @@ router.get('/get-users', getAllUsers);
 router.get('/get-user/:id', getUserById);
 
 router.post('/login', loginUser);
+
+router.delete('/delete-user/:id', authMiddleware, removeUser);
 
 export default router;

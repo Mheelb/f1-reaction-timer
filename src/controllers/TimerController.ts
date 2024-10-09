@@ -12,8 +12,6 @@ export const getAllTimers = async (req: Request, res: Response, next: NextFuncti
 
 export const getBestTimers = async (req: Request, res: Response, next: NextFunction) => {
     const range = req.query.range ? parseInt(req.query.range as string) : 10;
-    console.log(range);
-    
     try {
         const timers = await Timer.find().sort({ time: 1 }).limit(range);
         res.json(timers);

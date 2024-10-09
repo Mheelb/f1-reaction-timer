@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import Timer from '../models/Timer';
 import { getAllTimers, getBestTimer, getBestTimerByUserId, getBestTimers, getTimerByUserId, submitTimer } from '../controllers/TimerController';
 import { authMiddleware } from '../middlewares/auhtMiddleware';
@@ -15,6 +15,6 @@ router.get('/get-reaction-times/:userId', getTimerByUserId);
 
 router.get('/get-best-reaction-time/:userId', getBestTimerByUserId);
 
-router.post('/submit-reaction-time', submitTimer);
+router.post('/submit-reaction-time', authMiddleware, submitTimer);
 
 export default router;
