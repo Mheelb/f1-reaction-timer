@@ -1,9 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { comparePassword } from '../utils/passwordUtils';
-import User from '../models/User';
 import { 
-  registerUser,
-  loginUser,
   getAllUsers,
   getUserById,
   removeUser
