@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 
 describe('Test de la route GET /', () => {
   it('devrait retourner 200 et vérifier que la base de données est connectée', async () => {
-    // Attendre que la connexion soit établie
     await new Promise<void>((resolve) => {
       if (mongoose.connection.readyState === 1) {
         resolve();
