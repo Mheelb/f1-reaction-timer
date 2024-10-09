@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import Timer from '../models/Timer';
 import { getAllTimers, getBestTimer, getBestTimerByUserId, getBestTimers, getTimerByUserId, submitTimer } from '../controllers/TimerController';
 import { authMiddleware } from '../middlewares/auhtMiddleware';
 

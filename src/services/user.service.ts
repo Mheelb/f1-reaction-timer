@@ -1,6 +1,4 @@
 import User, { IUser } from '../models/User';
-import { comparePassword } from '../utils/passwordUtils';
-import { generateToken } from '../utils/tokenUtils';
 
 export class UserService {
     static async getAllUsers(): Promise<{users: IUser[], message: string | null}> {
