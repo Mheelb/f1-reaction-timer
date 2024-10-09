@@ -1,6 +1,6 @@
 import { Schema, model, Document, Types } from 'mongoose';
 
-interface ITimer extends Document {
+export interface ITimer extends Document {
   user_id: Types.ObjectId;
   time: number;
   submittedAt: Date;

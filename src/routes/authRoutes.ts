@@ -1,11 +1,8 @@
-import { Router, Request, Response } from 'express';
-import { comparePassword } from '../utils/passwordUtils';
-import User from '../models/User';
+import { Router } from 'express';
 import { 
   register,
   login,
 } from '../controllers/AuthController';
-import { authMiddleware } from '../middlewares/auhtMiddleware';
 
 const router = Router();
 

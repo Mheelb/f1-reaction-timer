@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import Timer from '../models/Timer';
+import { TimerService } from '../services/timer.service';
 
 export const getAllTimers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const timers = await Timer.find();
+        const timers = await TimerService.getAllTimers();
         res.json(timers);
     } catch (err) {
         next(err);
@@ -13,7 +13,7 @@ export const getAllTimers = async (req: Request, res: Response, next: NextFuncti
 export const getBestTimers = async (req: Request, res: Response, next: NextFunction) => {
     const range = req.query.range ? parseInt(req.query.range as string) : 10;
     try {
-        const timers = await Timer.find().sort({ time: 1 }).limit(range);
+        const timers = await TimerService.getBestTimers(range);
         res.json(timers);
     } catch (err) {
         next(err);
@@ -22,7 +22,7 @@ export const getBestTimers = async (req: Request, res: Response, next: NextFunct
 
 export const getBestTimer = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const timer = await Timer.findOne().sort({ time: 1 });
+        const timer = await TimerService.getBestTimer();
         res.json(timer);
     } catch (err) {
         next(err);
@@ -33,19 +33,17 @@ export const getTimerByUserId = async (req: Request, res: Response, next: NextFu
     const { userId } = req.params;
     const { sortBy = 'time', order = 'asc', limit = 10 } = req.query;
     try {
-      const reactionTimes = await Timer.find({ user_id: userId })
-        .sort({ [sortBy as string]: order === 'desc' ? -1 : 1 })
-        .limit(parseInt(limit as string, 10));
-      res.status(200).json(reactionTimes);
+        const reactionTimes = await TimerService.getTimerByUserId(userId, sortBy as string, order as string, parseInt(limit as string, 10));
+        res.status(200).json(reactionTimes);
     } catch (err) {
-      next(err);
+        next(err);
     }
 };
 
 export const getBestTimerByUserId = async (req: Request, res: Response, next: NextFunction) => {
     const { userId } = req.params;
     try {
-        const timer = await Timer.findOne({ user_id: userId }).sort({ time: 1 });
+        const timer = await TimerService.getBestTimerByUserId(userId);
         res.status(200).json(timer);
     } catch (err) {
         next(err);
@@ -55,10 +53,9 @@ export const getBestTimerByUserId = async (req: Request, res: Response, next: Ne
 export const submitTimer = async (req: Request, res: Response, next: NextFunction) => {
     const { user_id, time } = req.body;
     try {
-      const timer = new Timer({ user_id, time });
-      await timer.save();
-      res.status(201).send('Temps de réaction soumis avec succès');
+        const message = await TimerService.submitTimer(user_id, time);
+        res.status(201).send(message);
     } catch (err) {
-      next(err);
+        next(err);
     }
 };

@@ -1,13 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import User from '../models/User';
-import { comparePassword } from '../utils/passwordUtils';
-import { generateToken } from '../utils/tokenUtils';
+import { UserService } from '../services/user.service';
 
 export const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const users = await User.find();
-        if (!users) {
-            res.status(404).send('Aucun utilisateur trouvé');
+        const { users, message} = await UserService.getAllUsers();
+        if (!users.length) {
+            res.status(404).send(message);
             return;
         }
         res.json(users);
@@ -19,9 +17,9 @@ export const getAllUsers = async (req: Request, res: Response, next: NextFunctio
 export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
-        const user = await User.findById(id);
+        const { user, message } = await UserService.getUserById(id);
         if (!user) {
-            res.status(404).send('Utilisateur non trouvé');
+            res.status(404).send(message);
             return;
         }
         res.json(user);
@@ -30,46 +28,11 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
     }
 };
 
-export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password, role } = req.body;
-    try {
-        const user = new User({ email, password, role });
-        await user.save();
-        res.status(201).send('Utilisateur enregistré avec succès');
-    } catch (err) {
-        next(err);
-    }
-};
-
-export const loginUser = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, password } = req.body;
-    try {
-        const user = await User.findOne({ email }) as { _id: string, password: string };
-        if (!user) {
-            res.status(401).send('Email ou mot de passe incorrect');
-            return;
-        }
-        const isMatch = await comparePassword(password, user.password);
-        if (!isMatch) {
-            res.status(401).send('Email ou mot de passe incorrect');
-            return;
-        }
-        const token = generateToken(user._id.toString());
-        res.status(200).json({ message: 'Connexion réussie', token });
-    } catch (err) {
-        next(err);
-    }
-};
-
 export const removeUser = async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     try {
-        const user = await User.findByIdAndDelete(id);
-        if (!user) {
-            res.status(404).send('Utilisateur non trouvé');
-            return;
-        }
-        res.status(200).send('Utilisateur supprimé avec succès');
+        const message = await UserService.removeUser(id);
+        res.status(200).send(message);
     } catch (err) {
         next(err);
     }

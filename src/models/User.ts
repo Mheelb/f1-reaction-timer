@@ -1,7 +1,7 @@
 import { Schema, model, Document, CallbackError } from 'mongoose';
 import { hashPassword, comparePassword } from '../utils/passwordUtils';
 
-interface IUser extends Document {
+export interface IUser extends Document {
   email: string;
   password: string;
   role: boolean;
