@@ -1,11 +1,9 @@
-// src/utils/passwordUtils.ts
-import bcrypt from 'bcrypt';
+import * as argon2 from 'argon2';
 
 export const hashPassword = async (password: string): Promise<string> => {
-  const salt = await bcrypt.genSalt(10);
-  return bcrypt.hash(password, salt);
+  return argon2.hash(password);
 };
 
 export const comparePassword = (candidatePassword: string, hashedPassword: string): Promise<boolean> => {
-  return bcrypt.compare(candidatePassword, hashedPassword);
+  return argon2.verify(hashedPassword, candidatePassword);
 };
