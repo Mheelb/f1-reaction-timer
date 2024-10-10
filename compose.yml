@@ -18,7 +18,7 @@ services:
       - app-network
 
   db:
-    image: mongo:latest
+    image: mongo:8.0.1
     container_name: mongo-f1
     restart: always
     ports:
