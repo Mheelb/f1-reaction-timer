@@ -17,8 +17,8 @@
 1. Clonez le dépôt :
     ```bash
     git clone https://github.com/Mheelb/f1-reaction-timer.git
-    git checkout monolith
     cd f1-reaction-timer
+    git checkout monolith
     ```
 
 2. Configurez les variables d'environnement :
