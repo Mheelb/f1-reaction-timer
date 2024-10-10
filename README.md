@@ -48,6 +48,9 @@
 
 2. Accédez à l'application via `http://localhost:3001`.
 
+## Documentation de l'API
+La documentation de l'API est disponible à l'adresse suivante : `http://localhost:3001/api-docs`
+
 ## Tests
 Pour exécuter les tests, utilisez la commande suivante :
 ```bash
